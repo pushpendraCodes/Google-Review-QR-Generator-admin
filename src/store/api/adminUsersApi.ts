@@ -15,7 +15,7 @@ export const adminUsersApi = createApi({
     }),
     getUser: builder.query<any, string>({
       query: (id) => `/users/${id}`,
-      providesTags: (result, error, id) => [{ type: "User", id }],
+      providesTags: (_result, _error, id) => [{ type: "User", id }],
     }),
     updateUserStatus: builder.mutation<any, { id: string; status: string }>({
       query: ({ id, status }) => ({
@@ -23,7 +23,7 @@ export const adminUsersApi = createApi({
         method: "PATCH",
         body: { status },
       }),
-      invalidatesTags: (result, error, { id }) => ["User", { type: "User", id }],
+      invalidatesTags: (_result, _error, { id }) => ["User", { type: "User", id }],
     }),
     deleteUser: builder.mutation<any, string>({
       query: (id) => ({

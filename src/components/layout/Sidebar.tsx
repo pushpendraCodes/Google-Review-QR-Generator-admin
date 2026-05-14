@@ -3,8 +3,7 @@ import {
   Users,
   IndianRupee,
   QrCode,
-  Star,
-  Bell,
+
   Settings,
   LogOut,
   TrendingUp
