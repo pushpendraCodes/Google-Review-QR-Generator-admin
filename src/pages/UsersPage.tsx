@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Search, Filter, MoreHorizontal, UserCheck, UserPlus, UserX, Loader2 } from 'lucide-react';
+import { Search, Filter, UserCheck, UserPlus, UserX, Loader2 } from 'lucide-react';
 import { useListUsersQuery } from '../store/api/adminUsersApi';
 import Pagination from '../components/common/Pagination';
 
