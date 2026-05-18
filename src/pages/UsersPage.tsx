@@ -4,9 +4,9 @@ import { useListUsersQuery } from '../store/api/adminUsersApi';
 import Pagination from '../components/common/Pagination';
 
 const statColors = {
-  total:   { cardBg: '#E8F5EE', border: '#B6E2CB', iconBg: '#1A6B45' },
-  active:  { cardBg: '#D1FAE5', border: '#6EE7B7', iconBg: '#059669' },
-  churn:   { cardBg: '#FEF2F2', border: '#FECACA', iconBg: '#DC2626' },
+  total: { cardBg: '#E8F5EE', border: '#B6E2CB', iconBg: '#1A6B45' },
+  active: { cardBg: '#D1FAE5', border: '#6EE7B7', iconBg: '#059669' },
+  churn: { cardBg: '#FEF2F2', border: '#FECACA', iconBg: '#DC2626' },
 };
 
 const UsersPage = () => {
@@ -57,9 +57,9 @@ const UsersPage = () => {
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {[
-            { label: 'Total Users', value: stats.total?.toLocaleString(), icon: UserPlus,  key: 'total'  },
-            { label: 'Active Now',  value: stats.active?.toLocaleString(),   icon: UserCheck, key: 'active' },
-            { label: 'Churn Rate',  value: stats.churnRate,  icon: UserX,     key: 'churn'  },
+            { label: 'Total Users', value: stats.total?.toLocaleString(), icon: UserPlus, key: 'total' },
+            { label: 'Active Now', value: stats.active?.toLocaleString(), icon: UserCheck, key: 'active' },
+            { label: 'Churn Rate', value: stats.churnRate, icon: UserX, key: 'churn' },
           ].map((stat) => {
             const c = statColors[stat.key as keyof typeof statColors];
             return (
@@ -100,7 +100,7 @@ const UsersPage = () => {
                       <th className="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wider">Plan</th>
                       <th className="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
                       <th className="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wider">Joined</th>
-                      <th className="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wider text-right">Actions</th>
+                      {/* <th className="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wider text-right">Actions</th> */}
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100">
@@ -130,18 +130,18 @@ const UsersPage = () => {
                         </td>
                         <td className="px-6 py-4">
                           <div className="flex items-center gap-2">
-                            <div className={`w-1.5 h-1.5 rounded-full ${user.isActive ? 'bg-emerald-500' : 'bg-gray-300'}`} />
-                            <span className="text-sm text-gray-600 font-medium">{user.isActive ? 'Active' : 'Inactive'}</span>
+                            <div className={`w-1.5 h-1.5 rounded-full ${user.status == "active" ? 'bg-emerald-500' : 'bg-gray-300'}`} />
+                            <span className="text-sm text-gray-600 font-medium">{user.status == "active" ? 'Active' : 'Inactive'}</span>
                           </div>
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-500">
                           {new Date(user.createdAt).toLocaleDateString()}
                         </td>
-                        <td className="px-6 py-4 text-right">
+                        {/* <td className="px-6 py-4 text-right">
                           <button className="p-1.5 hover:bg-gray-100 rounded-lg text-gray-400 hover:text-gray-700 transition-colors">
                             <MoreHorizontal className="w-4 h-4" />
                           </button>
-                        </td>
+                        </td> */}
                       </tr>
                     ))}
                     {users.length === 0 && (
