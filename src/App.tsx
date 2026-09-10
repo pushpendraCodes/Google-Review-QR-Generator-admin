@@ -9,6 +9,7 @@ import ReviewsPage from './pages/ReviewsPage';
 import AlertsPage from './pages/AlertsPage';
 import SettingsPage from './pages/SettingsPage';
 import LoginPage from './pages/LoginPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import { useAppSelector, useAppDispatch } from './store/hooks';
 import { useGetMeQuery } from './store/api/adminAuthApi';
 import { setCredentials, logoutUser } from './store/slices/authSlice';
@@ -43,6 +44,10 @@ function App() {
     <Router>
       <Routes>
         <Route path="/login" element={!isAuthenticated ? <LoginPage /> : <Navigate to="/" />} />
+        <Route
+          path="/forgot-password"
+          element={!isAuthenticated ? <ForgotPasswordPage /> : <Navigate to="/" />}
+        />
         
         <Route
           path="/*"

@@ -22,7 +22,46 @@ export const adminAuthApi = createApi({
     getMe: builder.query<{ admin: AdminUser }, void>({
       query: () => "/auth/me",
     }),
+    forgotPassword: builder.mutation<{ success: boolean; message: string }, { email: string }>({
+      query: (body) => ({
+        url: "/auth/forgot-password",
+        method: "POST",
+        body,
+      }),
+    }),
+    verifyOtp: builder.mutation<{ success: boolean; message: string }, { email: string; otp: string }>({
+      query: (body) => ({
+        url: "/auth/verify-otp",
+        method: "POST",
+        body,
+      }),
+    }),
+    resetPassword: builder.mutation<
+      { success: boolean; message: string },
+      { email: string; newPassword: string }
+    >({
+      query: (body) => ({
+        url: "/auth/reset-password",
+        method: "POST",
+        body,
+      }),
+    }),
+    resendOtp: builder.mutation<{ success: boolean; message: string }, { email: string }>({
+      query: (body) => ({
+        url: "/auth/resend-otp",
+        method: "POST",
+        body,
+      }),
+    }),
   }),
 });
 
-export const { useLoginMutation, useLogoutMutation, useGetMeQuery } = adminAuthApi;
+export const {
+  useLoginMutation,
+  useLogoutMutation,
+  useGetMeQuery,
+  useForgotPasswordMutation,
+  useVerifyOtpMutation,
+  useResetPasswordMutation,
+  useResendOtpMutation,
+} = adminAuthApi;

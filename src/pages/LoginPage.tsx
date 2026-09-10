@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useLoginMutation } from '../store/api/adminAuthApi';
 import { useAppDispatch } from '../store/hooks';
 import { setCredentials } from '../store/slices/authSlice';
@@ -93,9 +93,12 @@ const LoginPage: React.FC = () => {
         </form>
 
         <div className="mt-8 text-center">
-          <p className="text-sm text-gray-500">
-            Forgot password? Contact super admin.
-          </p>
+          <Link
+            to="/forgot-password"
+            className="text-sm text-emerald-600 hover:text-emerald-700 font-medium transition-colors"
+          >
+            Forgot password?
+          </Link>
         </div>
       </div>
     </div>
