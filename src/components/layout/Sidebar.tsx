@@ -6,7 +6,6 @@ import {
 
   Settings,
   LogOut,
-  TrendingUp
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { clsx } from 'clsx';
@@ -47,9 +46,7 @@ const Sidebar = () => {
       <div>
         {/* Logo */}
         <div className="flex items-center gap-2 px-2 mb-8">
-          <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#2ECC71' }}>
-            <TrendingUp className="w-4 h-4 text-white" />
-          </div>
+          <img src="/favicon.svg" alt="ReviewQR" className="w-8 h-8 rounded-lg bg-white" />
           <div>
             <p className="text-white font-semibold text-sm leading-none">ReviewQR</p>
             <p className="text-[10px] leading-tight" style={{ color: '#6BAA8A' }}>Admin Panel</p>

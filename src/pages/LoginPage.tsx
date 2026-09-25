@@ -27,10 +27,10 @@ const LoginPage: React.FC = () => {
     <div className="min-h-screen bg-[#F4F7F4] flex items-center justify-center p-4">
       <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 border border-emerald-100">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-emerald-50 rounded-2xl mb-4">
-            <Lock className="w-8 h-8 text-emerald-600" />
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-white rounded-2xl mb-4 border border-emerald-100 overflow-hidden">
+            <img src="/favicon.svg" alt="ReviewQR" className="w-14 h-14" />
           </div>
-          <h1 className="text-2xl font-bold text-gray-900">Admin Portal</h1>
+          <h1 className="text-2xl font-bold text-gray-900">ReviewQR Admin</h1>
           <p className="text-gray-500 mt-2">Please sign in to your account</p>
         </div>
 
