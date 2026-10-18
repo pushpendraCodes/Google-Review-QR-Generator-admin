@@ -18,9 +18,20 @@ export const QRStatusBadge = ({ state }: { state: QRStatusFilter }) => {
   );
 };
 
+/** Customer logos are uploaded to Cloudinary; anything else is customer-controlled and not loaded. */
+const isTrustedLogoUrl = (value?: string) => {
+  if (!value) return false;
+  try {
+    const url = new URL(value);
+    return url.protocol === 'https:' && url.hostname === 'res.cloudinary.com';
+  } catch {
+    return false;
+  }
+};
+
 export const QRThumb = ({ name, logoUrl, size = 40 }: { name: string; logoUrl?: string; size?: number }) =>
-  logoUrl ? (
-    <img src={logoUrl} alt="" className="shrink-0 rounded-xl border border-[#E3EEE7] bg-white object-contain p-1" style={{ width: size, height: size }} />
+  isTrustedLogoUrl(logoUrl) ? (
+    <img src={logoUrl} alt="" loading="lazy" referrerPolicy="no-referrer" className="shrink-0 rounded-xl border border-[#E3EEE7] bg-white object-contain p-1" style={{ width: size, height: size }} />
   ) : (
     <div
       className="flex shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-[#E8F5EE] to-[#CFE3D7] font-bold text-[#1A6B45]"

@@ -24,8 +24,8 @@ function pageNumbers(current: number, total: number): (number | '…')[] {
 }
 
 const Pagination = ({
-  currentPage,
-  totalPages,
+  currentPage: requestedPage,
+  totalPages: rawTotalPages,
   onPageChange,
   totalItems,
   itemsPerPage,
@@ -33,6 +33,10 @@ const Pagination = ({
   pageSizeOptions = [10, 25, 50],
 }: PaginationProps) => {
   if (totalItems <= 0) return null;
+
+  // The list can shrink (filters, deletes) while a later page is selected.
+  const totalPages = Math.max(1, rawTotalPages);
+  const currentPage = Math.min(Math.max(1, requestedPage), totalPages);
 
   const startItem = (currentPage - 1) * itemsPerPage + 1;
   const endItem = Math.min(currentPage * itemsPerPage, totalItems);
