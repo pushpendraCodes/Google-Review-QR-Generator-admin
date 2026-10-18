@@ -1,4 +1,3 @@
-import React from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface PaginationProps {
@@ -7,85 +6,107 @@ interface PaginationProps {
   onPageChange: (page: number) => void;
   totalItems: number;
   itemsPerPage: number;
+  /** Shows a rows-per-page selector when provided. */
+  onItemsPerPageChange?: (size: number) => void;
+  pageSizeOptions?: number[];
 }
 
-const Pagination: React.FC<PaginationProps> = ({
+function pageNumbers(current: number, total: number): (number | '…')[] {
+  if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+  const pages: (number | '…')[] = [1];
+  const start = Math.max(2, current - 1);
+  const end = Math.min(total - 1, current + 1);
+  if (start > 2) pages.push('…');
+  for (let i = start; i <= end; i++) pages.push(i);
+  if (end < total - 1) pages.push('…');
+  pages.push(total);
+  return pages;
+}
+
+const Pagination = ({
   currentPage,
   totalPages,
   onPageChange,
   totalItems,
   itemsPerPage,
-}) => {
-  if (totalPages <= 1) return null;
+  onItemsPerPageChange,
+  pageSizeOptions = [10, 25, 50],
+}: PaginationProps) => {
+  if (totalItems <= 0) return null;
 
   const startItem = (currentPage - 1) * itemsPerPage + 1;
   const endItem = Math.min(currentPage * itemsPerPage, totalItems);
-
-  const getPageNumbers = () => {
-    const pages = [];
-    const showMax = 5;
-    
-    if (totalPages <= showMax) {
-      for (let i = 1; i <= totalPages; i++) pages.push(i);
-    } else {
-      pages.push(1);
-      if (currentPage > 3) pages.push('...');
-      
-      const start = Math.max(2, currentPage - 1);
-      const end = Math.min(totalPages - 1, currentPage + 1);
-      
-      for (let i = start; i <= end; i++) {
-        if (!pages.includes(i)) pages.push(i);
-      }
-      
-      if (currentPage < totalPages - 2) pages.push('...');
-      if (!pages.includes(totalPages)) pages.push(totalPages);
-    }
-    return pages;
-  };
+  const go = (page: number) => onPageChange(Math.min(Math.max(1, page), totalPages));
 
   return (
-    <div className="px-6 py-4 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4 mt-auto" style={{ backgroundColor: '#F4F7F4' }}>
-      <p className="text-xs text-gray-500 font-medium order-2 sm:order-1">
-        Showing <span className="text-gray-800">{startItem}</span> to <span className="text-gray-800">{endItem}</span> of <span className="text-gray-800">{totalItems}</span> results
-      </p>
-      
-      <div className="flex items-center gap-1 order-1 sm:order-2">
-        <button
-          onClick={() => onPageChange(currentPage - 1)}
-          disabled={currentPage === 1}
-          className="p-1.5 rounded-lg text-gray-400 hover:text-emerald-600 hover:bg-emerald-50 transition-all disabled:opacity-30 disabled:hover:bg-transparent"
-        >
-          <ChevronLeft className="w-4 h-4" />
-        </button>
-
-        {getPageNumbers().map((page, index) => (
-          page === '...' ? (
-            <span key={`dots-${index}`} className="px-2 text-gray-400 text-xs">...</span>
-          ) : (
-            <button
-              key={`page-${page}`}
-              onClick={() => onPageChange(page as number)}
-              className={`min-w-[32px] h-8 text-xs font-semibold rounded-lg transition-all ${
-                currentPage === page
-                  ? 'text-white shadow-sm'
-                  : 'text-gray-500 hover:text-emerald-600 hover:bg-emerald-50'
-              }`}
-              style={currentPage === page ? { backgroundColor: '#1A6B45' } : {}}
+    <div className="mt-auto flex flex-col items-center justify-between gap-3 border-t border-[#EEF3EF] bg-[#F7FAF8] px-5 py-3 sm:flex-row">
+      <div className="flex items-center gap-3 text-xs text-gray-500">
+        <span>
+          <span className="font-semibold text-gray-800 tabular-nums">
+            {startItem}–{endItem}
+          </span>{' '}
+          of <span className="font-semibold text-gray-800 tabular-nums">{totalItems.toLocaleString('en-IN')}</span>
+        </span>
+        {onItemsPerPageChange && (
+          <label className="flex items-center gap-1.5">
+            <span className="text-gray-400">Rows</span>
+            <select
+              value={itemsPerPage}
+              onChange={(e) => onItemsPerPageChange(Number(e.target.value))}
+              className="cursor-pointer rounded-md border border-[#D1E7DA] bg-white px-1.5 py-1 text-xs font-medium text-gray-700 outline-none focus:border-[#1A6B45]"
             >
-              {page}
-            </button>
-          )
-        ))}
-
-        <button
-          onClick={() => onPageChange(currentPage + 1)}
-          disabled={currentPage === totalPages}
-          className="p-1.5 rounded-lg text-gray-400 hover:text-emerald-600 hover:bg-emerald-50 transition-all disabled:opacity-30 disabled:hover:bg-transparent"
-        >
-          <ChevronRight className="w-4 h-4" />
-        </button>
+              {pageSizeOptions.map((n) => (
+                <option key={n} value={n}>
+                  {n}
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
       </div>
+
+      {totalPages > 1 && (
+        <nav className="flex items-center gap-1" aria-label="Pagination">
+          <button
+            onClick={() => go(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="rounded-lg p-1.5 text-gray-500 transition-all hover:bg-white hover:text-[#1A6B45] hover:shadow-sm disabled:pointer-events-none disabled:opacity-30"
+            aria-label="Previous page"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </button>
+
+          {pageNumbers(currentPage, totalPages).map((page, i) =>
+            page === '…' ? (
+              <span key={`dots-${i}`} className="px-1.5 text-xs text-gray-400">
+                …
+              </span>
+            ) : (
+              <button
+                key={page}
+                onClick={() => go(page)}
+                aria-current={currentPage === page ? 'page' : undefined}
+                className={`h-8 min-w-8 rounded-lg px-2 text-xs font-semibold tabular-nums transition-all duration-200 ${
+                  currentPage === page
+                    ? 'bg-[#1A6B45] text-white shadow-sm shadow-emerald-900/20'
+                    : 'text-gray-600 hover:bg-white hover:text-[#1A6B45] hover:shadow-sm'
+                }`}
+              >
+                {page}
+              </button>
+            ),
+          )}
+
+          <button
+            onClick={() => go(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className="rounded-lg p-1.5 text-gray-500 transition-all hover:bg-white hover:text-[#1A6B45] hover:shadow-sm disabled:pointer-events-none disabled:opacity-30"
+            aria-label="Next page"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </button>
+        </nav>
+      )}
     </div>
   );
 };

@@ -1,10 +1,12 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useEffect } from 'react';
-import Sidebar from './components/layout/Sidebar';
+import AdminLayout from './components/layout/AdminLayout';
 import Dashboard from './pages/Dashboard';
 import UsersPage from './pages/UsersPage';
+import UserDetailsPage from './pages/UserDetailsPage';
 import RevenuePage from './pages/RevenuePage';
 import QRCodesPage from './pages/QRCodesPage';
+import QRDetailsPage from './pages/QRDetailsPage';
 import ReviewsPage from './pages/ReviewsPage';
 import AlertsPage from './pages/AlertsPage';
 import SettingsPage from './pages/SettingsPage';
@@ -53,21 +55,20 @@ function App() {
           path="/*"
           element={
             isAuthenticated ? (
-              <div className="flex font-sans antialiased min-h-screen" style={{ backgroundColor: '#F4F7F4' }}>
-                <Sidebar />
-                <main className="flex-1 overflow-auto">
+              <AdminLayout>
                   <Routes>
                     <Route path="/" element={<Dashboard />} />
                     <Route path="/users" element={<UsersPage />} />
+                    <Route path="/users/:id" element={<UserDetailsPage />} />
                     <Route path="/revenue" element={<RevenuePage />} />
                     <Route path="/qr-codes" element={<QRCodesPage />} />
+                    <Route path="/qr-codes/:id" element={<QRDetailsPage />} />
                     <Route path="/reviews" element={<ReviewsPage />} />
                     <Route path="/alerts" element={<AlertsPage />} />
                     <Route path="/settings" element={<SettingsPage />} />
                     <Route path="*" element={<Navigate to="/" />} />
                   </Routes>
-                </main>
-              </div>
+              </AdminLayout>
             ) : (
               <Navigate to="/login" />
             )

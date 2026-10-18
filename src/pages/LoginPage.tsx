@@ -37,7 +37,7 @@ const LoginPage: React.FC = () => {
         {error && (
           <div className="mb-6 p-4 bg-red-50 border border-red-100 rounded-xl flex items-center gap-3 text-red-600 text-sm">
             <AlertCircle className="w-5 h-5 flex-shrink-0" />
-            <p>{(error as any)?.data?.message || 'Invalid email or password'}</p>
+            <p>{(error as { data?: { message?: string } })?.data?.message || 'Invalid email or password'}</p>
           </div>
         )}
 

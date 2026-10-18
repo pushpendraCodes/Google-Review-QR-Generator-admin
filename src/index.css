@@ -1,1 +1,49 @@
 @import "tailwindcss";
+
+@theme {
+  --animate-fade-up: fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-draw: draw 1.2s cubic-bezier(0.65, 0, 0.35, 1) both;
+  --animate-shimmer: shimmer 1.6s linear infinite;
+  --animate-progress: progress 1s ease-in-out infinite;
+  --animate-scale-in: scale-in 0.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+
+  @keyframes progress {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(300%); }
+  }
+
+  @keyframes scale-in {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes draw {
+    from { stroke-dashoffset: var(--path-length, 2000); }
+    to { stroke-dashoffset: 0; }
+  }
+
+  @keyframes shimmer {
+    from { background-position: -400px 0; }
+    to { background-position: 400px 0; }
+  }
+}
+
+@layer utilities {
+  .skeleton {
+    background: linear-gradient(90deg, #eef3ef 0px, #f7faf8 160px, #eef3ef 320px);
+    background-size: 800px 100%;
+    animation: var(--animate-shimmer);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -12,7 +12,7 @@ const AlertsPage = () => {
     <div className="flex-1 min-h-screen" style={{ backgroundColor: '#F4F7F4' }}>
       {/* Header */}
       <div
-        className="sticky top-0 z-30 backdrop-blur-xl border-b flex items-center justify-between px-6 sm:px-8 pt-5 pb-4"
+        className="sticky top-14 lg:top-0 z-20 backdrop-blur-xl border-b flex items-center justify-between px-6 sm:px-8 pt-5 pb-4"
         style={{ backgroundColor: 'rgba(255,255,255,0.85)', borderColor: '#D1E7DA' }}
       >
         <div>

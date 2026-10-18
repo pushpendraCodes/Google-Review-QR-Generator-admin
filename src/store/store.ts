@@ -5,6 +5,8 @@ import { adminDashboardApi } from "./api/adminDashboardApi";
 import { adminUsersApi } from "./api/adminUsersApi";
 import { adminRevenueApi } from "./api/adminRevenueApi";
 import { adminQRCodesApi } from "./api/adminQRCodesApi";
+import { adminPlatformReviewsApi } from "./api/adminPlatformReviewsApi";
+import { adminSettingsApi } from "./api/adminSettingsApi";
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +16,8 @@ export const store = configureStore({
     [adminUsersApi.reducerPath]: adminUsersApi.reducer,
     [adminRevenueApi.reducerPath]: adminRevenueApi.reducer,
     [adminQRCodesApi.reducerPath]: adminQRCodesApi.reducer,
+    [adminPlatformReviewsApi.reducerPath]: adminPlatformReviewsApi.reducer,
+    [adminSettingsApi.reducerPath]: adminSettingsApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -21,7 +25,9 @@ export const store = configureStore({
       adminDashboardApi.middleware,
       adminUsersApi.middleware,
       adminRevenueApi.middleware,
-      adminQRCodesApi.middleware
+      adminQRCodesApi.middleware,
+      adminPlatformReviewsApi.middleware,
+      adminSettingsApi.middleware
     ),
 });
 

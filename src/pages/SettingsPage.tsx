@@ -1,19 +1,26 @@
-import { User, Shield, Bell, Globe, Database, Save, ChevronRight } from 'lucide-react';
+import { useState } from 'react';
+import { User, Shield, Bell, Globe, Database, Save, ChevronRight, Tag } from 'lucide-react';
+import PricingSettings from '../components/settings/PricingSettings';
 
-const NAV_ITEMS = [
-  { label: 'General',       icon: User,     active: true },
-  { label: 'Security',      icon: Shield              },
-  { label: 'Notifications', icon: Bell                },
-  { label: 'Localization',  icon: Globe               },
-  { label: 'Database',      icon: Database            },
+type TabKey = 'pricing' | 'general';
+
+const NAV_ITEMS: { label: string; icon: typeof User; tab?: TabKey }[] = [
+  { label: 'Pricing & plans', icon: Tag,      tab: 'pricing' },
+  { label: 'General',         icon: User,     tab: 'general' },
+  { label: 'Security',        icon: Shield   },
+  { label: 'Notifications',   icon: Bell     },
+  { label: 'Localization',    icon: Globe    },
+  { label: 'Database',        icon: Database },
 ];
 
 const SettingsPage = () => {
+  const [tab, setTab] = useState<TabKey>('pricing');
+
   return (
     <div className="flex-1 min-h-screen" style={{ backgroundColor: '#F4F7F4' }}>
       {/* Header */}
       <div
-        className="sticky top-0 z-30 backdrop-blur-xl border-b flex items-center justify-between px-6 sm:px-8 pt-5 pb-4"
+        className="sticky top-14 lg:top-0 z-20 backdrop-blur-xl border-b flex items-center justify-between px-6 sm:px-8 pt-5 pb-4"
         style={{ backgroundColor: 'rgba(255,255,255,0.85)', borderColor: '#D1E7DA' }}
       >
         <div>
@@ -29,49 +36,51 @@ const SettingsPage = () => {
       </div>
 
       <div className="px-6 sm:px-8 py-6">
-        <div className="max-w-4xl grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="max-w-5xl grid grid-cols-1 lg:grid-cols-4 gap-6">
 
           {/* Settings nav — dark green like website sidebar */}
           <div
-            className="rounded-xl p-3 flex flex-col gap-0.5 h-fit"
+            className="rounded-xl p-3 flex flex-col gap-0.5 h-fit lg:sticky lg:top-24"
             style={{ backgroundColor: '#1A3A2E' }}
           >
-            {NAV_ITEMS.map((item) => (
-              <button
-                key={item.label}
-                className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm text-left transition-colors"
-                style={{
-                  backgroundColor: item.active ? 'rgba(46,204,113,0.20)' : 'transparent',
-                  color: item.active ? '#ffffff' : '#A8C9B8',
-                  fontWeight: item.active ? 500 : 400,
-                }}
-                onMouseEnter={(e) => {
-                  if (!item.active) {
-                    e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.05)';
-                    e.currentTarget.style.color = '#ffffff';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!item.active) {
-                    e.currentTarget.style.backgroundColor = 'transparent';
-                    e.currentTarget.style.color = '#A8C9B8';
-                  }
-                }}
-              >
-                <div className="flex items-center gap-2.5">
-                  <item.icon
-                    className="w-4 h-4 flex-shrink-0"
-                    style={{ color: item.active ? '#2ECC71' : '#6BAA8A' }}
-                  />
-                  {item.label}
-                </div>
-                {item.active && <ChevronRight className="w-3.5 h-3.5 flex-shrink-0" style={{ color: '#2ECC71' }} />}
-              </button>
-            ))}
+            {NAV_ITEMS.map((item) => {
+              const active = item.tab === tab;
+              const disabled = !item.tab;
+              return (
+                <button
+                  key={item.label}
+                  onClick={() => item.tab && setTab(item.tab)}
+                  disabled={disabled}
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm text-left transition-colors ${
+                    active ? '' : 'hover:bg-white/5 hover:text-white'
+                  } disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent`}
+                  style={{
+                    backgroundColor: active ? 'rgba(46,204,113,0.20)' : undefined,
+                    color: active ? '#ffffff' : '#A8C9B8',
+                    fontWeight: active ? 500 : 400,
+                  }}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <item.icon
+                      className="w-4 h-4 flex-shrink-0"
+                      style={{ color: active ? '#2ECC71' : '#6BAA8A' }}
+                    />
+                    {item.label}
+                  </div>
+                  {active && <ChevronRight className="w-3.5 h-3.5 flex-shrink-0" style={{ color: '#2ECC71' }} />}
+                  {disabled && <span className="text-[10px] uppercase tracking-wider text-[#6BAA8A]">Soon</span>}
+                </button>
+              );
+            })}
           </div>
 
           {/* Content area */}
-          <div className="lg:col-span-2 space-y-5">
+          {tab === 'pricing' ? (
+            <div className="lg:col-span-3">
+              <PricingSettings />
+            </div>
+          ) : (
+          <div className="lg:col-span-3 space-y-5">
 
             {/* Profile card */}
             <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
@@ -169,6 +178,7 @@ const SettingsPage = () => {
             </div>
 
           </div>
+          )}
         </div>
       </div>
     </div>
