@@ -23,8 +23,15 @@ import {
   ChevronRight,
   Globe,
   AlertTriangle,
+  Sparkles,
 } from 'lucide-react';
-import { useGetQRCodeQuery, useListQRScansQuery, useSetQRActiveMutation } from '../store/api/adminQRCodesApi';
+import {
+  useGetQRCodeQuery,
+  useListQRScansQuery,
+  useSetQRActiveMutation,
+  type QRDetails,
+  type QRReviewProfile,
+} from '../store/api/adminQRCodesApi';
 import Pagination from '../components/common/Pagination';
 import TrendChart from '../components/dashboard/TrendChart';
 import CountUp from '../components/dashboard/CountUp';
@@ -160,6 +167,98 @@ const RecentScans = ({ id }: { id: string }) => {
             setPage(1);
           }}
         />
+      )}
+    </Card>
+  );
+};
+
+const TONE_LABELS: Record<NonNullable<QRReviewProfile['tone']>, string> = {
+  friendly: 'Friendly',
+  professional: 'Professional',
+  enthusiastic: 'Enthusiastic',
+};
+
+const ProfileChips = ({ label, items }: { label: string; items: string[] }) => (
+  <div>
+    <p className="mb-1.5 text-[11px] font-medium uppercase tracking-wider text-gray-400">{label}</p>
+    <div className="flex flex-wrap gap-1.5">
+      {items.map((item) => (
+        <span key={item} className="rounded-full border border-[#E3EEE7] bg-[#F7FAF8] px-2.5 py-1 text-xs text-gray-700">
+          {item}
+        </span>
+      ))}
+    </div>
+  </div>
+);
+
+/** Personalised AI review setup (services/highlights/staff); questions only show to customers on an active Pro/Agency plan. */
+const AIReviewProfileCard = ({ profile, owner }: { profile?: QRReviewProfile; owner?: QRDetails['qr']['owner'] }) => {
+  const services = profile?.services ?? [];
+  const highlights = profile?.highlights ?? [];
+  const staff = profile?.staff ?? [];
+  const configured = services.length > 0 || highlights.length > 0;
+  const planAllows =
+    (owner?.plan === 'pro' || owner?.plan === 'agency') &&
+    (!owner?.planExpiresAt || new Date(owner.planExpiresAt) > new Date());
+
+  const status = !configured
+    ? null
+    : planAllows
+      ? { text: 'Live on review page', cls: 'bg-emerald-50 text-emerald-700' }
+      : { text: 'Saved · plan inactive', cls: 'bg-amber-50 text-amber-700' };
+
+  return (
+    <Card
+      title="AI review profile"
+      icon={Sparkles}
+      delay={200}
+      action={status && <span className={`rounded-full px-2 py-0.5 text-[11px] font-semibold ${status.cls}`}>{status.text}</span>}
+    >
+      {!configured ? (
+        <p className="text-sm text-gray-400">Not set up. Customers get generic AI review suggestions.</p>
+      ) : (
+        <div className="space-y-4">
+          <div className="grid gap-3 sm:grid-cols-3">
+            <div>
+              <p className="text-[11px] font-medium uppercase tracking-wider text-gray-400">Category</p>
+              <p className="text-sm font-medium text-gray-800">{profile?.category || <span className="text-gray-400">Not set</span>}</p>
+            </div>
+            <div>
+              <p className="text-[11px] font-medium uppercase tracking-wider text-gray-400">Tone</p>
+              <p className="text-sm font-medium text-gray-800">{TONE_LABELS[profile?.tone ?? 'friendly']}</p>
+            </div>
+            <div>
+              <p className="text-[11px] font-medium uppercase tracking-wider text-gray-400">Last updated</p>
+              <p className="text-sm font-medium text-gray-800">
+                {profile?.updatedAt ? timeAgo(profile.updatedAt) : <span className="text-gray-400">Unknown</span>}
+              </p>
+            </div>
+          </div>
+
+          {profile?.description && (
+            <div>
+              <p className="mb-1 text-[11px] font-medium uppercase tracking-wider text-gray-400">Description</p>
+              <p className="text-sm leading-relaxed text-gray-700">{profile.description}</p>
+            </div>
+          )}
+
+          {services.length > 0 && (
+            <div>
+              <p className="mb-1.5 text-[11px] font-medium uppercase tracking-wider text-gray-400">Services ({services.length})</p>
+              <ul className="divide-y divide-[#F1F5F2] rounded-xl border border-[#E3EEE7]">
+                {services.map((s) => (
+                  <li key={s.name} className="flex flex-wrap items-baseline gap-x-2 px-3 py-2">
+                    <span className="text-sm font-medium text-gray-800">{s.name}</span>
+                    {s.detail && <span className="text-xs text-gray-500">{s.detail}</span>}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {highlights.length > 0 && <ProfileChips label={`Highlights (${highlights.length})`} items={highlights} />}
+          {staff.length > 0 && <ProfileChips label={`Staff (${staff.length})`} items={staff} />}
+        </div>
       )}
     </Card>
   );
@@ -386,6 +485,8 @@ const QRDetailsPage = () => {
               This QR code is paused. Anyone scanning it sees a "disabled" page instead of the review page.
             </div>
           )}
+
+          <AIReviewProfileCard profile={qr.reviewProfile} owner={qr.owner} />
 
           <Card title="Scan activity" icon={Activity} delay={220} action={<span className="text-xs text-gray-400">Last 30 days</span>}>
             <TrendChart data={scanSeries} color="#10B981" label="Scans" height={220} />

@@ -54,6 +54,17 @@ export interface AdminQRCode {
   createdAt: string;
   lastScanAt: string | null;
   scans7d: number;
+  hasAiProfile?: boolean;
+}
+
+export interface QRReviewProfile {
+  category?: string;
+  description?: string;
+  services?: { name: string; detail?: string }[];
+  highlights?: string[];
+  staff?: string[];
+  tone?: "friendly" | "professional" | "enthusiastic";
+  updatedAt?: string | null;
 }
 
 export interface QRDetails {
@@ -63,6 +74,7 @@ export interface QRDetails {
     googleSyncedAt?: string | null;
     hasWatermark?: boolean;
     latestReviews?: { authorName?: string; rating?: number; text?: string; time?: number }[];
+    reviewProfile?: QRReviewProfile;
     updatedAt: string;
   };
   scanSeries: DailyPoint[];

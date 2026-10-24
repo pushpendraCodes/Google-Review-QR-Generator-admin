@@ -10,6 +10,7 @@ import {
   MapPin,
   X,
   ChevronRight,
+  Sparkles,
 } from 'lucide-react';
 import { useGetQRStatsQuery, useListQRCodesQuery, type QRSort, type QRStatusFilter, type AdminQRCode } from '../store/api/adminQRCodesApi';
 import type { PlanName } from '../store/api/adminDashboardApi';
@@ -252,6 +253,14 @@ const QRCodesPage = () => {
                             <span className="mt-0.5 inline-block rounded bg-[#E8F5EE] px-1.5 py-px font-mono text-[10px] font-semibold text-[#1A6B45]">
                               {q.shortCode}
                             </span>
+                            {q.hasAiProfile && (
+                              <span
+                                className="ml-1.5 mt-0.5 inline-flex items-center gap-0.5 rounded bg-amber-50 px-1.5 py-px text-[10px] font-semibold text-amber-700"
+                                title="Has an AI review profile (services / highlights / staff)"
+                              >
+                                <Sparkles className="h-2.5 w-2.5" /> AI profile
+                              </span>
+                            )}
                           </div>
                         </div>
                       </td>
